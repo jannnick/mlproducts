@@ -23,3 +23,8 @@ logging.basicConfig(
     format="[%(asctime)s ]%(lineno)d %(name)s - %(levelname)s - %(message)s",
     level=logging.INFO,
 )
+
+""" Code to test logging setup
+if __name__ == "__main__":
+    logging.info("Logging setup complete.")
+    print(f"Logs will be saved to {logs_path}")"""
