@@ -5,4 +5,8 @@ matplotlib
 seaborn
 scipy
 dill
--e .
+xgboost
+catboost
+GridSearchCV
+lightgbm
+#-e .
