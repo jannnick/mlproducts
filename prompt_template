@@ -1,0 +1,113 @@
+A markdown prompt template to instruct an agentic coding LLM like Claude Code to build a similar end-to-end machine learning project.
+
+-----
+
+```markdown
+# Prompt for Building an End-to-End Machine Learning Project
+
+You are an expert ML engineer. Your task is to build a robust, end-to-end machine learning project with a modular coding structure and a web interface for inference.
+
+---
+
+## 1. Project Overview
+
+* **Project Goal**: To build a complete machine learning application that predicts **`[Describe the prediction goal, e.g., customer churn, house prices, medical diagnosis]`**.
+* **ML Problem Type**: This is a **`[e.g., Classification, Regression]`** problem.
+* **Target Variable**: The column we want to predict is `[Name of the target variable column]`.
+* **Dataset**: The dataset is located at `[Provide the path or URL to the dataset, e.g., 'data/my_data.csv']`. It contains information about **`[Briefly describe the dataset's content]`**.
+
+---
+
+## 2. Core Requirements
+
+* **Modular Structure**: The code must be organized into separate components for data ingestion, data transformation, and model training.
+* **Pipeline Orchestration**: Create pipelines to manage the training and prediction workflows.
+* **Web Interface**: Develop a simple **Flask** application to serve the model and allow users to get predictions via a web form.
+* **Artifacts**: The pipeline must generate and save key artifacts, specifically the data preprocessor object and the trained model object.
+* **Error Handling & Logging**: Implement basic logging and custom exceptions for robust error handling.
+
+---
+
+## 3. Desired Project Structure
+
+Please create the project with the following directory and file structure:
+
+```
+
+.
+├── src/
+│   ├── components/
+│   │   ├── **init**.py
+│   │   ├── data\_ingestion.py
+│   │   ├── data\_transformation.py
+│   │   └── model\_trainer.py
+│   ├── pipeline/
+│   │   ├── **init**.py
+│   │   ├── predict\_pipeline.py
+│   │   └── train\_pipeline.py
+│   ├── **init**.py
+│   ├── exceptions.py
+│   ├── logger.py
+│   └── utils.py
+├── templates/
+│   └── home.html
+├── main.py
+├── requirements.txt
+└── setup.py
+
+```
+
+---
+
+## 4. Component-Specific Instructions
+
+### **`src/components/` - The ML Pipeline Stages**
+
+* **`data_ingestion.py`**:
+    * Read the dataset from the path specified above.
+    * Perform a standard train-test split (e.g., 80/20 split).
+    * Save the resulting `train.csv` and `test.csv` into an `artifacts` directory.
+
+* **`data_transformation.py`**:
+    * Create a data transformation pipeline using `sklearn.compose.ColumnTransformer`.
+    * Automatically identify numerical and categorical features from the training data.
+    * For numerical columns, handle missing values (e.g., with the median) and apply standard scaling.
+    * For categorical columns, handle missing values (e.g., with the mode) and apply one-hot encoding.
+    * Save the fitted `ColumnTransformer` object as a pickle file (`preprocessor.pkl`) in the `artifacts` directory.
+
+* **`model_trainer.py`**:
+    * Define a dictionary of at least three suitable machine learning models for this problem type.
+    * Use `GridSearchCV` to perform hyperparameter tuning for each model.
+    * Evaluate the models based on an appropriate metric (`R-squared` for regression, `Accuracy` or `F1-Score` for classification).
+    * Identify the best-performing model and save it as `model.pkl` in the `artifacts` directory.
+
+### **`src/pipeline/` - Workflow Orchestration**
+
+* **`train_pipeline.py`**: Create a script or function that orchestrates the entire training flow by calling the ingestion, transformation, and trainer components in sequence.
+* **`predict_pipeline.py`**:
+    * Create a `PredictPipeline` class that loads the saved `preprocessor.pkl` and `model.pkl` artifacts.
+    * It should have a `predict` method that takes new data, transforms it, and returns a prediction.
+    * Also, create a `CustomData` class to map input from the web form to a pandas DataFrame that the `predict` method can process.
+
+### **Root Directory Files**
+
+* **`main.py`**:
+    * Create a Flask application.
+    * Implement a home route (`/`) that renders the `home.html` template.
+    * Implement a `predictdata` route that handles both `GET` (to display the form) and `POST` (to process form data and return a prediction) requests.
+
+* **`templates/home.html`**:
+    * Create a simple HTML page using **Bootstrap** for styling.
+    * The page must contain a form with input fields for all the features required by the model.
+    * Include a placeholder to display the final prediction result after the form is submitted.
+
+* **`utils.py`, `exceptions.py`, `logger.py`**:
+    * **`utils.py`**: Should contain helper functions like `save_object` and `load_object` to handle saving/loading pickle files.
+    * **`exceptions.py` & `logger.py`**: Set up a basic custom exception handler and a logger to record key events and errors.
+
+* **`requirements.txt` & `setup.py`**:
+    * Generate a `requirements.txt` file listing all necessary libraries.
+    * Create a `setup.py` file to make the `src` directory installable as a package.
+
+Please begin by creating the `setup.py` and project structure, and then proceed with implementing each component as described.
+```
